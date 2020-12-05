@@ -127,7 +127,8 @@ class ClientSM:
                     # ----------your code here------#
                     # 先确认我的status 如果我现在只是login，那么直接成组; 无需考虑成组的情况因为me的state是login不是chatting
                     self.state = S_CHATTING
-                    self.out_msg = 'You are connected with' + ' ' + peer_msg['from']
+                    value = 'You are connected with' + ' ' + peer_msg['from']
+                    self.out_msg = {"typ": "c", "value":str(value)}
                     # ----------end of your code----#
                     
 #==============================================================================

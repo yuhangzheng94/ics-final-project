@@ -14,7 +14,6 @@ import threading
 
 
 class MainWindow(Tk):
-
     def __init__(self):
         super().__init__()
         self.chat_transcript_area = None

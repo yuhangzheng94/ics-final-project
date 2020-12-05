@@ -79,8 +79,8 @@ class GUI:
             value = self.display['value']
             print(typ,value)
             # MiddleFrame
-            if typ == 'message':
-                self.chat_transcript_area.insert('end',value)
+            if typ == 'exchange':
+                self.chat_transcript_area.insert('end',value+ '\n')
 
             elif typ == 'time':
                 pass
@@ -99,8 +99,8 @@ class GUI:
             # 只剩下p的情况
             else:
                 # self.SearchResult.insert('end', self.display + '\n')
+                self.SearchResult.insert('end',value+ '\n\n')
 
-                self.SearchResult.insert('end',value)
 
 
 
@@ -201,23 +201,19 @@ class GUI:
         btnTime.pack(fill='both', side='top', padx=6)
 
         #  Name List
-        self.NameList = Listbox(LeftFrame, selectmode='single')
-        scrollbarName = Scrollbar(LeftFrame, borderwidth=2, command=self.NameList.yview, orient=VERTICAL)
+        NLFrame = Frame(LeftFrame)
+        self.NameList = Listbox(NLFrame, selectmode='single')
+        scrollbarName = Scrollbar(NLFrame, borderwidth=2, command=self.NameList.yview, orient=VERTICAL)
         self.NameList.config(yscrollcommand=scrollbarName.set)
         self.NameList.bind('<Double-1>', self.newConnect)
-        self.NameList.pack(side='top', padx=6, pady=12)
-        scrollbarName.pack(side='top', padx=6, pady=10)
-
-        # ----
-        # self.nameListx = StringVar()
-        # MsgnameList = Message(LeftFrame,textvariable = self.nameList,font=("Helvetica", 16))
-        # MsgnameList.pack(fill='both',padx=6,side='top')
-        # ----
+        self.NameList.pack(side='left', padx=6, pady=12)
+        scrollbarName.pack(side='right', padx=6, pady=10)
         btnRefresh = Button(LeftFrame, text='Refresh List', font=("Helvetica", 16), command=self.getlist)
         btnRefresh.pack(fill='both', padx=6, pady=10)
         # self.name_widget = Entry(LeftFrame, width=50, borderwidth=2)
         # self.name_widget.pack(side='left', anchor='e')
         # self.join_button = Button(frame, text="Join", width=10, command=self.on_join).pack(side='left')
+        NLFrame.pack(side='top')
         LeftFrame.pack(side='left', padx=10, pady=5)
 
     def display_middle_frame(self):

@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3c87ef1d-af7a-4d8e-9498-1f84c958510a" name="Default Changelist" comment="" />
+    <list default="true" id="3c87ef1d-af7a-4d8e-9498-1f84c958510a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LoginCat.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wendhy.idx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wendy.idx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chat_client_class.py" beforeDir="false" afterPath="$PROJECT_DIR$/chat_client_class.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chat_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/chat_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_state_machine.py" beforeDir="false" afterPath="$PROJECT_DIR$/client_state_machine.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/copy.py" beforeDir="false" afterPath="$PROJECT_DIR$/copy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/history.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/text.py" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -132,9 +143,25 @@
       <option name="presentableId" value="Default" />
       <updated>1607003077191</updated>
     </task>
+    <task id="LOCAL-00001" summary="adgweg">
+      <created>1607191801201</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1607191801201</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="adgweg" />
+    <option name="LAST_COMMIT_MESSAGE" value="adgweg" />
+  </component>
   <component name="WindowStateProjectService">
+    <state x="229" y="0" key="CommitChangelistDialog2" timestamp="1607191800996">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="229" y="0" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1607191800996" />
     <state width="1405" height="293" key="GridCell.Tab.0.bottom" timestamp="1607188104244">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -171,6 +198,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1405" height="273" key="GridCell.Tab.1.right/0.0.1440.900@0.0.1440.900" timestamp="1607178553236" />
+    <state x="120" y="65" key="Vcs.Push.Dialog.v2" timestamp="1607191820095">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="120" y="65" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1607191820095" />
     <state x="111" y="181" width="1240" height="719" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1607108831278">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
@@ -183,101 +214,5 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="217" y="0" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1607152423994" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/chat_client_class.py</url>
-          <line>367</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/chat_client_class.py</url>
-          <line>313</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/chat_client_class.py</url>
-          <line>311</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/copy.py</url>
-          <line>387</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/copy.py</url>
-          <line>56</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/copy.py</url>
-          <line>155</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/copy.py</url>
-          <line>140</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/copy.py</url>
-          <line>142</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/copy.py</url>
-          <line>376</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/chat_server.py</url>
-          <line>148</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/chat_server.py</url>
-          <line>144</line>
-          <option name="timeStamp" value="21" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/copy.py</url>
-          <line>337</line>
-          <option name="timeStamp" value="23" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/copy.py</url>
-          <line>78</line>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/client_state_machine.py</url>
-          <line>156</line>
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/client_state_machine.py</url>
-          <line>152</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/client_state_machine.py</url>
-          <line>160</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/client_state_machine.py</url>
-          <line>65</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/client_state_machine.py</url>
-          <line>67</line>
-          <option name="timeStamp" value="29" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
