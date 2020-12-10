@@ -172,10 +172,10 @@ class Server:
                 me = self.logged_sock2name[from_sock]
                 msg = self.group.list_all(me)
                 # "...needs to use self.group functions to work"
-                names = self.group.chat_grps
+                members = str(self.group.members)
                 # ---- end of your code --- #
                 mysend(from_sock, json.dumps(
-                    {"action": "list", "results": msg, "names": names}))
+                    {"action": "list", "results": msg, "members": members}))
 # ==============================================================================
 #             retrieve a sonnet : IMPLEMENT THIS
 # ==============================================================================

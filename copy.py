@@ -31,7 +31,7 @@ class GUI:
         self.nameList = None
         self.search = None
         self.Time = None
-        self.names = []
+        self.members = []
         # 接受的消息
         self.sendout = []
         self.selected_name=''
@@ -86,8 +86,12 @@ class GUI:
                 pass
 
             # LeftFrame
-            elif typ == 'who':
-                pass
+            elif typ == 'list':
+                members = eval(value)
+                for name in members.keys():
+                    grp_key = members[name]
+                    self.members.append( [ name, grp_key ] )
+                    self.NameList.insert(END, name + " (group " + str(grp_key) + ")")
 
             elif typ == 'c':
                 pass
@@ -95,6 +99,9 @@ class GUI:
             # RightFrame
             elif typ == '?':
                 pass
+
+            elif typ == "connect":
+                self.chat_transcript_area.insert('end', value + '\n')
 
             # 只剩下p的情况
             else:
@@ -205,7 +212,7 @@ class GUI:
         self.NameList = Listbox(NLFrame, selectmode='single')
         scrollbarName = Scrollbar(NLFrame, borderwidth=2, command=self.NameList.yview, orient=VERTICAL)
         self.NameList.config(yscrollcommand=scrollbarName.set)
-        self.NameList.bind('<Double-1>', self.newConnect)
+        self.NameList.bind('<Double-1>', lambda x: self.newConnect())
         self.NameList.pack(side='left', padx=6, pady=12)
         scrollbarName.pack(side='right', padx=6, pady=10)
         btnRefresh = Button(LeftFrame, text='Refresh List', font=("Helvetica", 16), command=self.getlist)
@@ -302,26 +309,22 @@ class GUI:
 
     def getlist(self):
         self.NameList.delete(0, 'end')
-        mysend(self.socket, json.dumps({"action": "list"}))
-        logged_in = json.loads(myrecv(self.socket))["names"]
-        self.names = []
-        for name, grp_key in logged_in:
-            self.names.append([name, grp_key])
-            self.NameList.insert(END, name + "(group " + grp_key + ")")
+        request = "who"
+        self.sendout = [request]
+        print(self.sendout)
 
     def newConnect(self):
-        idx_selected_name = self.NameList.get(self.NameList.curselection())
-        self.selected_name = self.names[idx_selected_name[0]]
+        # idx_selected_name = self.NameList.get(self.NameList.curselection())
+        # self.selected_name = self.members[idx_selected_name[0]]
+        selected = [self.NameList.get(x) for x in self.NameList.curselection()][0]
+        self.selected_name = selected.split("(group")[0]
         my_msg = self.selected_name
-        peer = my_msg[1:]
+        peer = my_msg[:]
         peer = peer.strip()
-        if self.sm.connect_to(peer) == True:
-            self.state = S_CHATTING
-            msgConnect = 'Connect to ' + peer + '. Chat away!\n\n'
-            msgConnect += '-----------------------------------\n'
-        else:
-            msgConnect = 'Connection unsuccessful\n'
-        self.chat_transcript_area.insert('end', msgConnect.decode('utf-8') + '\n')
+        sendout = "c" + peer
+        if self.state == S_LOGGEDIN:
+            self.sendout = [sendout]
+            print(self.sendout)
 
 
     def bye(self):

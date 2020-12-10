@@ -70,6 +70,28 @@ class ClientSM:
         except:
             pass
 
+        # time
+
+        try:
+            if my_msg == 'time':
+                mysend(self.s, json.dumps({"action": "time"}))
+                time_in = json.loads(myrecv(self.s))["results"]
+                self.out_msg += time_in
+        except:
+            pass
+        # who
+
+        try:
+            if my_msg == 'who':
+                mysend(self.s, json.dumps({"action": "list"}))
+                members = json.loads(myrecv(self.s))["members"]
+                print('have sent message: list')
+                if len(members) > 0:
+                    self.out_msg = {"typ": "list", "value": members}
+                return self.out_msg
+        except:
+            pass
+
 
         if self.state == S_LOGGEDIN:
             # todo: can't deal with multiple lines yet
@@ -84,12 +106,11 @@ class ClientSM:
                     time_in = json.loads(myrecv(self.s))["results"]
                     self.out_msg += time_in
 
-
-                elif my_msg == 'who':
-                    mysend(self.s, json.dumps({"action":"list"}))
-                    logged_in = json.loads(myrecv(self.s))["results"]
-                    self.out_msg += 'Here are all the users in the system:\n'
-                    self.out_msg += logged_in
+                # elif my_msg == 'who':
+                #     mysend(self.s, json.dumps({"action":"list"}))
+                #     logged_in = json.loads(myrecv(self.s))["results"]
+                #     self.out_msg += 'Here are all the users in the system:\n'
+                #     self.out_msg += logged_in
 
                 elif my_msg[0] == 'c':
                     peer = my_msg[1:]
@@ -98,10 +119,12 @@ class ClientSM:
                     if self.connect_to(peer) == True:
                         # 如果我成功地与peer配对
                         self.state = S_CHATTING
-                        self.out_msg += 'Connect to ' + peer + '. Chat away!\n\n'
+                        self.out_msg = 'Connect to ' + peer + '. Chat away!\n\n'
                         self.out_msg += '-----------------------------------\n'
                     else:
-                        self.out_msg += 'Connection unsuccessful\n'
+                        self.out_msg = 'Connection unsuccessful\n'
+                    dict_result = {"typ":"connect", "value": self.out_msg}
+                    return dict_result
 
                 elif my_msg[0] == '?':
                     term = my_msg[1:].strip()
