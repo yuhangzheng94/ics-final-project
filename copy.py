@@ -106,7 +106,9 @@ class GUI:
             # 只剩下p的情况
             else:
                 # self.SearchResult.insert('end', self.display + '\n')
-                self.SearchResult.insert('end',value+ '\n\n')
+                lines = eval(value)
+                for line in lines:
+                    self.SearchResult.insert('end',line+ '\n')
 
 
 
