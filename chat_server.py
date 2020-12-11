@@ -172,6 +172,8 @@ class Server:
                 me = self.logged_sock2name[from_sock]
                 msg = self.group.list_all(me)
                 # "...needs to use self.group functions to work"
+                members = self.group.members
+                members.pop(me, None)
                 members = str(self.group.members)
                 # ---- end of your code --- #
                 mysend(from_sock, json.dumps(
