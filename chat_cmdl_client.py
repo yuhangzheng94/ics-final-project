@@ -1,7 +1,7 @@
 
 from chat_client_class import *
 
-import copy
+import GUI
 
 def main():
     import argparse
@@ -11,7 +11,7 @@ def main():
 
     # client = Client(args)
     # client.run_chat()
-    client = copy.GUI(args)
+    client = GUI.GUI(args)
     client.run_chat()
 
 

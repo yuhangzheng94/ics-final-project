@@ -6,7 +6,7 @@ CHAT_IP = '127.0.0.1'
 # CHAT_IP = socket.gethostbyname(socket.gethostname())
 #CHAT_IP = ''#socket.gethostbyname(socket.gethostname())
 
-CHAT_PORT = 1113
+CHAT_PORT = 1114
 SERVER = (CHAT_IP, CHAT_PORT)
 
 menu = "\n++++ Choose one of the following commands\n \

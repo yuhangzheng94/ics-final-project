@@ -9,6 +9,7 @@ from tkinter import Toplevel,Tk, Frame, Scrollbar, Label, END, Entry, Text, VERT
 import tkinter.messagebox as msgbx
 import time
 import threading
+import os
 
 class GUI:
     def __init__(self, args):
@@ -21,7 +22,6 @@ class GUI:
         self.peer_msg = ''
         self.args = args
         self.username = None
-
 
         # Window Related
         self.RootWindow = None
@@ -170,16 +170,8 @@ class GUI:
         reading_thread = threading.Thread(target=self.proc)
         reading_thread.daemon = False
         reading_thread.start()
-        print("already here")
-        # while self.login() != True:
-        #     self.output()
-        # self.output()
-        # while self.sm.get_state() != S_OFFLINE:
-        #     self.proc()
-        #     self.output()
-        #     time.sleep(CHAT_WAIT)
-        # self.quit()
-        print('finally works')
+
+
 
     def showMainWindow(self):
         # initialize MainWindow, defining it as a non-resizable Toplevel named 'Chatting'
@@ -191,6 +183,10 @@ class GUI:
         self.display_left_frame()
         self.display_middle_frame()
         self.display_right_frame()
+
+    def openSnack(self):
+        os.system('python snack.py')
+
 
     def display_left_frame(self):
         # Left Frame
@@ -210,7 +206,7 @@ class GUI:
         btnTime.pack(fill='both', side='top', padx=6)
 
         #  Name List
-        NLFrame = Frame(LeftFrame)
+        NLFrame = Frame(LeftFrame,bg="bisque2")
         self.NameList = Listbox(NLFrame, selectmode='single')
         scrollbarName = Scrollbar(NLFrame, borderwidth=2, command=self.NameList.yview, orient=VERTICAL)
         self.NameList.config(yscrollcommand=scrollbarName.set)
@@ -223,6 +219,10 @@ class GUI:
         # self.name_widget.pack(side='left', anchor='e')
         # self.join_button = Button(frame, text="Join", width=10, command=self.on_join).pack(side='left')
         NLFrame.pack(side='top')
+
+        btnSnack = Button(LeftFrame, text='PLAY A GAME', font=("Helvetica", 16), command=self.openSnack)
+        btnSnack.pack(fill='both', pady=10, padx=6)
+
         LeftFrame.pack(side='left', padx=10, pady=5)
 
     def display_middle_frame(self):
@@ -340,7 +340,7 @@ class GUI:
         num = self.search.get()
         num = 'p'+num
         self.sendout = [num]
-        print(self.sendout)
+
 
 
 
@@ -364,14 +364,10 @@ class GUI:
 
 
     def on_enter_key_pressed(self,event):
-        # if len(self.name_widget.get()) == 0:
-        #     messagebox.showerror("Enter your name", "Enter your name to send a message")
-        #     return
         self.send_chat()
         self.clear_text()
 
     def send_chat(self):
-        # senders_name = self.name_widget.get().strip() + ": "
         chatInput = self.enter_text_widget.get(1.0, 'end').strip()
         message = ('['+self.name+']' + chatInput).encode('utf-8')
         self.chat_transcript_area.insert('end', message.decode('utf-8') + '\n')
@@ -399,5 +395,6 @@ class GUI:
             my_msg, peer_msg = self.get_msgs()
             self.display = self.sm.proc(my_msg, peer_msg)
             self.output()
+
 
             # time.sleep(CHAT_WAIT)
