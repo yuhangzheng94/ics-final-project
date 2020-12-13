@@ -55,7 +55,7 @@ class GUI:
         read, write, error = select.select([self.socket], [], [], 0)
         my_msg = ''
         peer_msg = []
-        if len(self.sendout) < 0:
+        if len(self.sendout) > 0:
             my_msg = self.sendout.pop(0)
         if self.socket in read:
             peer_msg = self.recv()
@@ -63,44 +63,23 @@ class GUI:
 
     def output(self):
         if len(self.display) > 0:
-            print(type(self.display))
-            print(type(self.display['typ']))
             typ = self.display['typ']
             value = self.display['value']
-            print(typ,value)
+            print(self.display)
             # MiddleFrame
-            if typ == 'exchange':
+            if typ == 'exchange' or typ == "connect" or typ == "disconnect":
                 self.chat_transcript_area.insert('end',value+ '\n')
-
-            elif typ == 'time':
-                pass
-
-            # # LeftFrame
-            # elif typ == 'list':
-            #     members = eval(value)
-            #     for name in members.keys():
-            #         grp_key = members[name]
-            #         self.members.append( [ name, grp_key ] )
-            #         self.nameList.insert(END, name + " (group " + str(grp_key) + ")")
-
-            elif typ == 'c':
-                pass
-
             # RightFrame
-            elif typ == '?':
+            elif typ =="poem":
                 lines = eval(value)
                 for line in lines:
                     self.SearchResult.insert('end', line + '\n')
-
-            elif typ == "connect":
-                self.chat_transcript_area.insert('end', value + '\n')
-
-            # 只剩下p的情况
-            else:
-                # self.SearchResult.insert('end', self.display + '\n')
+            elif typ == "?":
                 lines = eval(value)
                 for line in lines:
-                    self.SearchResult.insert('end',line+ '\n')
+                    self.SearchResult.insert('end', line[1] + '\n')
+            else:
+                print("output else")
 
 
 
@@ -111,7 +90,6 @@ class GUI:
             self.send(msg)
             response = json.loads(self.recv())
             if response["status"] == 'ok':
-                self.state = S_LOGGEDIN
                 self.sm.set_state(S_LOGGEDIN)
                 self.sm.set_myname(name)
                 return "success"
@@ -323,8 +301,6 @@ class GUI:
         self.sendout = [num]
 
 
-
-
     def openLoginWindow(self):
         self.LoginWindow = Toplevel(self.RootWindow)
         self.LoginWindow.geometry('450x300')
@@ -339,6 +315,7 @@ class GUI:
     def logout(self):
         close = msgbx.askyesno('Quit?','Do you want to log off?')
         if close:
+            self.sm.set_state(S_OFFLINE)
             self.MainWindow.destroy()
             self.quit()
 
@@ -378,4 +355,4 @@ class GUI:
             self.display = self.sm.proc(my_msg, peer_msg)
             self.output()
 
-            # time.sleep(CHAT_WAIT)
+            time.sleep(CHAT_WAIT)

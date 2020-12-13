@@ -24,7 +24,7 @@ S_CHATTING  = 3
 
 SIZE_SPEC = 5
 
-CHAT_WAIT = 0.2
+CHAT_WAIT = 0.3
 
 def print_state(state):
     print('**** State *****::::: ')
@@ -43,6 +43,7 @@ def mysend(s, msg):
     #append size to message and send it
     msg = ('0' * SIZE_SPEC + str(len(msg)))[-SIZE_SPEC:] + str(msg)
     msg = msg.encode()
+    print(msg)
     total_sent = 0
     while total_sent < len(msg) :
         sent = s.send(msg[total_sent:])
@@ -56,6 +57,7 @@ def myrecv(s):
     size = ''
     while len(size) < SIZE_SPEC:
         text = s.recv(SIZE_SPEC - len(size)).decode()
+        print(text)
         if not text:
             print('disconnected')
             return('')
@@ -65,6 +67,7 @@ def myrecv(s):
     msg = ''
     while len(msg) < size:
         text = s.recv(size-len(msg)).decode()
+        print(text)
         if text == b'':
             print('disconnected')
             break

@@ -70,7 +70,7 @@ class ClientSM:
         except:
             pass
 
-        if self.state == ( S_LOGGEDIN or S_CHATTING ):
+        if self.state == S_LOGGEDIN or self.state == S_CHATTING:
             try:
                 if my_msg[0] == '?':
                     term = my_msg[1:].strip()
@@ -90,22 +90,7 @@ class ClientSM:
             # todo: can't deal with multiple lines yet
             if len(my_msg) > 0:
 
-                if my_msg == 'q':
-                    self.out_msg += 'See you next time!\n'
-                    self.state = S_OFFLINE
-
-                elif my_msg == 'time':
-                    mysend(self.s, json.dumps({"action":"time"}))
-                    time_in = json.loads(myrecv(self.s))["results"]
-                    self.out_msg += time_in
-
-                # elif my_msg == 'who':
-                #     mysend(self.s, json.dumps({"action":"list"}))
-                #     logged_in = json.loads(myrecv(self.s))["results"]
-                #     self.out_msg += 'Here are all the users in the system:\n'
-                #     self.out_msg += logged_in
-
-                elif my_msg[0] == 'c':
+                if my_msg[0] == 'c':
                     peer = my_msg[1:]
                     peer = peer.strip()
                     # 去除首尾空格
@@ -116,25 +101,23 @@ class ClientSM:
                         self.out_msg += '-----------------------------------\n'
                     else:
                         self.out_msg = 'Connection unsuccessful\n'
-                    dict_result = {"typ":"connect", "value": self.out_msg}
-                    return dict_result
+                    return {"typ":"connect", "value": self.out_msg}
 
                 else:
-                    self.out_msg += menu
+                    return {"typ":"", "value":""}
 
             if len(peer_msg) > 0:
                 try:
                     peer_msg = json.loads(peer_msg)
                 except Exception as err :
-                    self.out_msg += " json.loads failed " + str(err)
-                    return self.out_msg
+                    return " json.loads failed " + str(err)
             
                 if peer_msg["action"] == "connect":
                     # ----------your code here------#
                     # 先确认我的status 如果我现在只是login，那么直接成组; 无需考虑成组的情况因为me的state是login不是chatting
                     self.state = S_CHATTING
                     value = 'You are connected with' + ' ' + peer_msg['from']
-                    self.out_msg = {"typ": "c", "value":str(value)}
+                    return {"typ": "connect", "value":str(value)}
                     # ----------end of your code----#
                     
 #==============================================================================
@@ -147,7 +130,6 @@ class ClientSM:
                 if my_msg == 'bye':
                     self.disconnect()
                     self.state = S_LOGGEDIN
-                    self.peer = ''
             if len(peer_msg) > 0:    # peer's stuff, coming in
                 # ----------your code here------#
                 peer_msg = json.loads(peer_msg)
@@ -158,16 +140,16 @@ class ClientSM:
                 if peer_msg['action'] == 'connect':
                     # 让我知道peer join了，并且让和我在同一个chat group的member知道peer join了,这个是server端的工作
                     value = peer_msg['from'] + ' '+ 'joined'
-                    self.out_msg = {"typ": "c", "value":str(value)}
+                    return {"typ": "connect", "value":str(value)}
 
-                if peer_msg['action'] == 'exchange':
+                elif peer_msg['action'] == 'exchange':
                     value = '[' + peer_msg['from'] + ']:' + peer_msg['msg']
-                    self.out_msg = {"typ": "exchange", "value": str(value)}
+                    return {"typ": "exchange", "value": str(value)}
 
-                if peer_msg['action']== 'disconnect':
+                elif peer_msg['action']== 'disconnect':
                     value = peer_msg['msg']
-                    self.out_msg = {"typ": "disconnect", "value": str(value)}
                     self.state = S_LOGGEDIN
+                    return {"typ": "disconnect", "value": str(value)}
                 # ----------end of your code----#
                 
             # # Display the menu again
@@ -181,4 +163,4 @@ class ClientSM:
             self.out_msg = {"typ": "exchange", "value": str(value)}
             print_state(self.state)
 
-        return self.out_msg
+        return ''
