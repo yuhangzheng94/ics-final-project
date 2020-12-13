@@ -173,8 +173,8 @@ class Server:
                 msg = self.group.list_all(me)
                 # "...needs to use self.group functions to work"
                 members = self.group.members
-                members.pop(me, None)
-                members = str(self.group.members)
+                # members.pop(me, None)
+                members = self.group.members
                 # ---- end of your code --- #
                 mysend(from_sock, json.dumps(
                     {"action": "list", "results": msg, "members": members}))

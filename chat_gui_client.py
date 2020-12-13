@@ -1,6 +1,3 @@
-
-from chat_client_class import *
-
 import GUI
 
 def main():
@@ -9,11 +6,7 @@ def main():
     parser.add_argument('-d', type=str, default=None, help='server IP address')
     args = parser.parse_args()
 
-    # client = Client(args)
-    # client.run_chat()
     client = GUI.GUI(args)
     client.run_chat()
-
-
 
 main()

@@ -14,28 +14,21 @@ import os
 class GUI:
     def __init__(self, args):
         # User(Client) Related
-        self.peer = ''
-        self.console_input = []
-        self.state = S_OFFLINE
-        self.system_msg = ''
-        self.local_msg = ''
-        self.peer_msg = ''
         self.args = args
         self.username = None
 
         # Window Related
-        self.RootWindow = None
+        self.RootWindow = Tk()
         self.LoginWindow = None
-        self.mainWindow = None
+        self.MainWindow = None
+
         # StringVariable
         self.nameList = None
-        self.search = None
-        self.Time = None
-        self.members = []
-        # 接受的消息
-        self.sendout = []
-        self.selected_name=''
+        self.search = StringVar()
+        self.time = StringVar()
+
         # 发出的消息
+        self.sendout = []
         self.display = {}
 
 
@@ -43,8 +36,6 @@ class GUI:
         self.socket.shutdown(socket.SHUT_RDWR)
         self.socket.close()
 
-    def get_name(self):
-        return self.name
 
     # 初始化
     def init_chat(self):
@@ -60,12 +51,11 @@ class GUI:
     def recv(self):
         return myrecv(self.socket)
 
-    def get_msgs(self):
+    def get_msg(self):
         read, write, error = select.select([self.socket], [], [], 0)
         my_msg = ''
         peer_msg = []
-        #peer_code = M_UNDEF    for json data, peer_code is redundant
-        if len(self.sendout) > 0:
+        if len(self.sendout) < 0:
             my_msg = self.sendout.pop(0)
         if self.socket in read:
             peer_msg = self.recv()
@@ -85,20 +75,22 @@ class GUI:
             elif typ == 'time':
                 pass
 
-            # LeftFrame
-            elif typ == 'list':
-                members = eval(value)
-                for name in members.keys():
-                    grp_key = members[name]
-                    self.members.append( [ name, grp_key ] )
-                    self.NameList.insert(END, name + " (group " + str(grp_key) + ")")
+            # # LeftFrame
+            # elif typ == 'list':
+            #     members = eval(value)
+            #     for name in members.keys():
+            #         grp_key = members[name]
+            #         self.members.append( [ name, grp_key ] )
+            #         self.nameList.insert(END, name + " (group " + str(grp_key) + ")")
 
             elif typ == 'c':
                 pass
 
             # RightFrame
             elif typ == '?':
-                pass
+                lines = eval(value)
+                for line in lines:
+                    self.SearchResult.insert('end', line + '\n')
 
             elif typ == "connect":
                 self.chat_transcript_area.insert('end', value + '\n')
@@ -113,50 +105,40 @@ class GUI:
 
 
 
-    def login(self):
-        # my_msg, peer_msg = self.get_msgs()
-        userEntr = self.username.get()
-        if len(userEntr) > 0:
-            self.name = userEntr
-            msg = json.dumps({"action":"login", "name":self.name})
+    def login(self, name):
+        if len(name) > 0:
+            msg = json.dumps({"action":"login", "name":name})
             self.send(msg)
             response = json.loads(self.recv())
             if response["status"] == 'ok':
                 self.state = S_LOGGEDIN
                 self.sm.set_state(S_LOGGEDIN)
-                self.sm.set_myname(self.name)
-                self.print_instructions()
-                return True
+                self.sm.set_myname(name)
+                return "success"
             elif response["status"] == 'duplicate':
-                self.system_msg += 'Duplicate username, try again'
-                return False
+                return "duplicate"
         else:               # fix: dup is only one of the reasons
-           return False
+           return "invalid"
 
 
-    def read_input(self):
-        while True:
-            text = sys.stdin.readline()[:-1]
-            self.console_input.append(text) # no need for lock, append is thread safe
-
-    def print_instructions(self):
-        self.system_msg += menu
 
     def guilogin(self):
-        if self.login():
+        newName = self.username.get()
+        result = self.login(newName)
+        if result == "success":
             msgbx.showinfo('Logged in.', 'Login Success')
             self.LoginWindow.destroy()
             self.openMainWindow()
         # further enhancement of handling sick login is needed
-        elif self.login() == 'Duplicate':
+        elif result == 'Duplicate':
             msgbx.showinfo('Error1', 'This Username already exists. Try another.')
-        else:
+        elif result == "invalid":
             msgbx.showinfo('Error2', 'Invalid Input. Try Again.')
 
-    #
+
     def run_chat(self):
         self.init_chat()
-        self.RootWindow = Tk()
+        # self.RootWindow = Tk()
         self.RootWindow.geometry('0x0')
         self.RootWindow.resizable(0,0)
         self.openLoginWindow()
@@ -164,8 +146,6 @@ class GUI:
 
 
     def openMainWindow(self):
-        # if self.sm.get_state() != S_OFFLINE:
-        #     self.proc()
         self.showMainWindow()
         reading_thread = threading.Thread(target=self.proc)
         reading_thread.daemon = False
@@ -183,6 +163,7 @@ class GUI:
         self.display_left_frame()
         self.display_middle_frame()
         self.display_right_frame()
+        self.gettime()
 
     def openSnack(self):
         os.system('python snack.py')
@@ -198,20 +179,18 @@ class GUI:
         btnLeave.pack(fill='both', pady=10, padx=6)
 
         # ShowTime & RefreshTime
-        self.Time = StringVar()
-        self.gettime()
-        lblTime = Label(LeftFrame, textvariable=self.Time, font=("Helvetica", 16))
+        lblTime = Label(LeftFrame, textvariable=self.time, font=("Helvetica", 16))
         lblTime.pack(fill='both', pady=10, padx=6)
         btnTime = Button(LeftFrame, text='Refresh Time', font=("Helvetica", 16), command=self.gettime)
         btnTime.pack(fill='both', side='top', padx=6)
 
         #  Name List
         NLFrame = Frame(LeftFrame,bg="bisque2")
-        self.NameList = Listbox(NLFrame, selectmode='single')
-        scrollbarName = Scrollbar(NLFrame, borderwidth=2, command=self.NameList.yview, orient=VERTICAL)
-        self.NameList.config(yscrollcommand=scrollbarName.set)
-        self.NameList.bind('<Double-1>', lambda x: self.newConnect())
-        self.NameList.pack(side='left', padx=6, pady=12)
+        self.nameList = Listbox(NLFrame, selectmode='single')
+        scrollbarName = Scrollbar(NLFrame, borderwidth=2, command=self.nameList.yview, orient=VERTICAL)
+        self.nameList.config(yscrollcommand=scrollbarName.set)
+        self.nameList.bind('<Double-1>', lambda x: self.newConnect())
+        self.nameList.pack(side='left', padx=6, pady=12)
         scrollbarName.pack(side='right', padx=6, pady=10)
         btnRefresh = Button(LeftFrame, text='Refresh List', font=("Helvetica", 16), command=self.getlist)
         btnRefresh.pack(fill='both', padx=6, pady=10)
@@ -267,7 +246,7 @@ class GUI:
         RightFrame.pack_propagate(0)
 
         # Welcome Message
-        WelcomeStr = 'Welcome,' + self.name + '!'
+        WelcomeStr = 'Welcome,' + self.sm.get_myname() + '!'
         WelcomeLabel = Label(RightFrame, text=WelcomeStr, font=("Helvetica", 14))
         WelcomeLabel.pack(fill='both', padx=6, pady=10)
         RightFrame.pack(side='left', padx=10, pady=5)
@@ -278,7 +257,6 @@ class GUI:
         InstructionLabel.pack(fill='both', side='top', padx=5, pady=10)
 
         # Search Frame
-        self.search = StringVar()
         SearchEnt = Entry(RightFrame,textvariable=self.search)
         SearchEnt.pack(side ='top',padx=5,pady=10)
 
@@ -288,7 +266,7 @@ class GUI:
         SonnetButton = Button(ButtonFrame,text='Get Sonnet!',command = self.getSonnet)
         SonnetButton.pack(side='left')
         # HisButton
-        HisButton = Button(ButtonFrame, text='Search History',command=self.getSonnet)
+        HisButton = Button(ButtonFrame, text='Search History',command=self.searchHistory)
         HisButton.pack(side='left')
         ButtonFrame.pack(side='top')
         # label "search result"
@@ -297,7 +275,7 @@ class GUI:
 
         # SearchResult
         self.SearchResult = Text(RightFrame, width=30, height=20, font=("Serif", 12))
-        scrollbarSearchResult = Scrollbar(RightFrame, borderwidth=2, command=self.NameList.yview, orient=VERTICAL)
+        scrollbarSearchResult = Scrollbar(RightFrame, borderwidth=2, command=self.nameList.yview, orient=VERTICAL)
         self.SearchResult.config(yscrollcommand=scrollbarSearchResult.set)
         self.SearchResult.bind('<KeyPress>', lambda e: 'break')
         scrollbarSearchResult.pack(side='right', fill='y', padx=6, pady=10)
@@ -306,27 +284,30 @@ class GUI:
 
 
     def gettime(self):
-        ctime = time.strftime('%m/%d,%H:%M', time.localtime())
-        self.Time.set(ctime)
+        mysend(self.socket, json.dumps({"action": "time"}))
+        time_in = json.loads(myrecv(self.socket))["results"]
+        self.time.set(time_in)
 
     def getlist(self):
-        self.NameList.delete(0, 'end')
-        request = "who"
-        self.sendout = [request]
-        print(self.sendout)
+        self.nameList.delete(0, 'end')
+        mysend(self.socket, json.dumps({"action": "list"}))
+        members = json.loads(myrecv(self.socket))["members"]
+        for name in members.keys():
+            grp_key = members[name]
+            self.nameList.insert(END, name + " (group " + str(grp_key) + ")")
+
 
     def newConnect(self):
-        # idx_selected_name = self.NameList.get(self.NameList.curselection())
-        # self.selected_name = self.members[idx_selected_name[0]]
-        selected = [self.NameList.get(x) for x in self.NameList.curselection()][0]
-        self.selected_name = selected.split("(group")[0]
-        my_msg = self.selected_name
+        selected = [self.nameList.get(x) for x in self.nameList.curselection()][0]
+        my_msg = selected.split("(group")[0]
         peer = my_msg[:]
         peer = peer.strip()
         sendout = "c" + peer
-        if self.state == S_LOGGEDIN:
+        if self.sm.get_state() == S_LOGGEDIN:
             self.sendout = [sendout]
             print(self.sendout)
+        elif self.sm.get_state() == S_CHATTING:
+            pass
 
 
     def bye(self):
@@ -369,22 +350,23 @@ class GUI:
 
     def send_chat(self):
         chatInput = self.enter_text_widget.get(1.0, 'end').strip()
-        message = ('['+self.name+']' + chatInput).encode('utf-8')
+        message = ('['+ self.sm.get_myname() +']' + chatInput).encode('utf-8')
         self.chat_transcript_area.insert('end', message.decode('utf-8') + '\n')
         self.chat_transcript_area.yview(END)
         self.sendout = [chatInput]
         self.enter_text_widget.delete(1.0, 'end')
-        return 'break'
+        return
 
     def clear_text(self):
         self.enter_text_widget.delete(1.0, 'end')
 
-        pass
     def setChatInstruction(self):
         pass
 
-    def search(self):
-        pass
+    def searchHistory(self):
+        keyword = self.search.get()
+        req = '?' + keyword
+        self.sendout = [req]
 
 
 #==============================================================================
@@ -392,9 +374,8 @@ class GUI:
 #==============================================================================
     def proc(self):
         while True:
-            my_msg, peer_msg = self.get_msgs()
+            my_msg, peer_msg = self.get_msg()
             self.display = self.sm.proc(my_msg, peer_msg)
             self.output()
-
 
             # time.sleep(CHAT_WAIT)
